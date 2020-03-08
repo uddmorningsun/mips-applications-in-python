@@ -1,0 +1,38 @@
+From 21152dc97b30818ea2bc4ceff2cb2cfa697f2d92 Mon Sep 17 00:00:00 2001
+From: fake <fake@foo.cn>
+Date: Sun, 8 Mar 2020 07:48:59 +0000
+Subject: [PATCH pytorch] support mips arch in v1.4.0
+
+---
+ aten/src/TH/vector/simd.h    | 2 +-
+ tools/setup_helpers/cmake.py | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/aten/src/TH/vector/simd.h b/aten/src/TH/vector/simd.h
+index 8f77d24348..87732ca6c3 100644
+--- a/aten/src/TH/vector/simd.h
++++ b/aten/src/TH/vector/simd.h
+@@ -72,7 +72,7 @@ static inline uint32_t detectHostSIMDExtensions()
+
+  #endif
+
+-#elif defined(__s390x__)
++#elif defined(__s390x__) || defined(__mips__)
+
+ static inline uint32_t detectHostSIMDExtensions()
+ {
+diff --git a/tools/setup_helpers/cmake.py b/tools/setup_helpers/cmake.py
+index 33d650a2d5..23f1e992c0 100644
+--- a/tools/setup_helpers/cmake.py
++++ b/tools/setup_helpers/cmake.py
+@@ -216,6 +216,7 @@ class CMake:
+             '_GLIBCXX_USE_CXX11_ABI': 'GLIBCXX_USE_CXX11_ABI',
+             'CUDNN_LIB_DIR': 'CUDNN_LIBRARY',
+             'USE_CUDA_STATIC_LINK': 'CAFFE2_STATIC_LINK_CUDA',
++            'PSIMD_SOURCE_DIR': 'PSIMD_SOURCE_DIR',
+             'USE_GLOO_IBVERBS': 'USE_IBVERBS'   # Backward compatibility. Will be removed in the future.
+         }
+         additional_options.update({
+--
+2.20.1
+
